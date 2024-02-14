@@ -5,7 +5,8 @@ const {UserModel , CourseModel } = require("../Db/schema")
 const jsonwebtoken = require('jsonwebtoken');
 const JWT_SECRET = require("../Middlewares/JWT_SECRET")
 const hashPassword = require("../Encryption/encrypt")
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const { json } = require('body-parser');
 
 
 router.get('/' , (req ,res)=>{
@@ -138,5 +139,19 @@ router.get('/course' , async(req ,res)=>{
     })
 })
 
+router.post('/update' , userMiddleware , async(req , res) => {
+        let username = req.username ; 
+        let updatedDoccument = await UserModel.findOneAndUpdate({username : username} , req.body , {new : true})
+        console.log(updatedDoccument);
+        let newToken = jsonwebtoken.sign({username : updatedDoccument.username , isAdmin : false} , JWT_SECRET)
+        res.status(200).json({newToken})
+})
+router.get('/userInfo' , userMiddleware ,  async(req ,res) => {
+    let userInfo = await UserModel.findOne({username : req.username})
+    if (userInfo != null)
+    {
+        res.status(200).json({userInfo})
+    }
+})
 
 module.exports = router
