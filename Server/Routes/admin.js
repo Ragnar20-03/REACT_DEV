@@ -129,5 +129,12 @@ router.get('/course/:id' , AdminMiddleware ,async (req ,res)=>{
     }
 })
 
+router.post('/update/:id',AdminMiddleware , async(req ,res) => {
+    let newDoc = await CourseModel.findByIdAndUpdate({_id : req.params.id} ,req.body , {
+        new : true ,
+    } )
+    res.status(200).json({newDoc})
+})
+
 
 module.exports = router

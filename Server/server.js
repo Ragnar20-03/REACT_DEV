@@ -13,6 +13,9 @@ app.use('/admin' , admin)
 
 const PORT = 5100
 
+app.get('/'  , function (req,res){
+
+})
 app.listen (PORT , ()=>{
     console.log("Server Started on : " ,PORT);
 })
